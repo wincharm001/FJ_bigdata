@@ -76,11 +76,11 @@ def train_val_split(X, test_size=0.3):
 train_index, val_index = train_val_split(img_list, test_size=0.3)
 
 
-# for i in train_index:
-#     img_list[i].save(f"data/images/train/{i}.png")
-#     img_mask_list[i].save(f"data/masks/train/{i}_mask.png")
+for i in train_index:
+    img_list[i].save(f"data/images/train/{i}.png")
+    img_mask_list[i].save(f"data/masks/train/{i}_mask.png")
 
-# for i in val_index:
-#     img_list[i].save(f"data/images/val/{i}.png")
-#     img_mask_list[i].save(f"data/masks/val/{i}_mask.png")
+for i in val_index:
+    img_list[i].save(f"data/images/val/{i}.png")
+    img_mask_list[i].save(f"data/masks/val/{i}_mask.png")
 
