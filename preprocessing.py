@@ -31,8 +31,8 @@ img2_mask = img2_mask.crop((left, upper, right, lower))
 # img2.save(train_path + "img2/img2_rotated_cropped.tif")
 # img2_mask.save(train_path + "img2/img2_mask_rotated_cropped.tif")
 
-# img1: (22019, 11369), img2: (12940, 21180) -> (800, 500)
-crop_size = (800, 500)
+# img1: (22019, 11369), img2: (12940, 21180) -> (512, 512)
+crop_size = (512, 512)
 
 def crop_img(img: Image):
     # 将两张图片裁剪成相同形状的一组图像
