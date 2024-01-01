@@ -65,6 +65,7 @@ img_mask_list = img1_mask_list + img2_mask_list
 def train_val_split(X, test_size=0.3):
     '''生成从 0 到 len(X) 的序列，打乱序列，将序列最后的那部分作为
        验证集，返回打乱后的训练集和验证集的序号'''
+    random.seed(2024)
     nums = len(X)
     train_index = [i for i in range(nums)]
     test_num = round(nums * test_size)  # 验证集的数据个数
@@ -75,12 +76,21 @@ def train_val_split(X, test_size=0.3):
 
 train_index, val_index = train_val_split(img_list, test_size=0.3)
 
+# 存储训练集与验证集的样本序号
+with open("train.txt", 'w') as f:
+    for i in train_index:
+        f.write(str(i) + '\n')
+
+with open("val.txt", 'w') as f:
+    for i in val_index:
+        f.write(str(i) + '\n')
+
 
 for i in train_index:
-    img_list[i].save(f"data/images/train/{i}.png")
-    img_mask_list[i].save(f"data/masks/train/{i}_mask.png")
+    img_list[i].save(f"datasets/images/train/{i}.png")
+    img_mask_list[i].save(f"datasets/masks/train/{i}_mask.png")
 
 for i in val_index:
-    img_list[i].save(f"data/images/val/{i}.png")
-    img_mask_list[i].save(f"data/masks/val/{i}_mask.png")
+    img_list[i].save(f"datasets/images/val/{i}.png")
+    img_mask_list[i].save(f"datasets/masks/val/{i}_mask.png")
 

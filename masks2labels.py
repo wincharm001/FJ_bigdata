@@ -1,5 +1,5 @@
 import os
-
+import shutil
 import cv2
 
 masks_dir = './temp/'
@@ -40,4 +40,28 @@ def masks2labels(masks_dir, labels_dir):
 
 
 def split():
-    # 获取train和val文件夹列表，下划线分割取数字，在labels中取出相应数字的labels
+    with open("train.txt", 'r') as f:
+        train_index = f.readlines()
+        f.close()
+    with open("val.txt", 'r') as f:
+        val_index = f.readlines()
+        f.close()
+    
+    train_index = [int(i[:-1]) for i in train_index]
+    val_index = [int(i[:-1]) for i in val_index]
+    
+    labels_names = os.listdir(labels_dir)
+
+    for i in range(len(labels_names)):
+        index = int(labels_names[i].split('_')[0])
+        if index in train_index:
+            shutil.move(f'labels/{index}_mask.txt', f'datasets/labels/train/{index}.txt')
+        elif index in val_index:
+            shutil.move(f'labels/{index}_mask.txt', f'datasets/labels/val/{index}.txt')
+        else:
+            print('error!')
+            exit(0)
+
+
+masks2labels(masks_dir, labels_dir)
+split()
