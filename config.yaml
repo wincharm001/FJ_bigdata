@@ -1,4 +1,3 @@
-path: ./data
 train: images/train
 val: images/val
 
