@@ -1,9 +1,5 @@
-import random
-random.seed(2024)
-a = [1,2,3,4,5,6,7,8,9,10]
-random.shuffle(a)
+from ultralytics import YOLO
 
-print(random.randrange(0, 10))
-print(random.randrange(0, 10))
+model = YOLO("yolov8n.pt")
 
-print(a)
+model.train(data="config.yaml", epochs=100, imgsz=512)
