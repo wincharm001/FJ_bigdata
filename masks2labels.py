@@ -9,7 +9,7 @@ def masks2labels(masks_dir, labels_dir):
         image_path = os.path.join(masks_dir, j)
         # load the binary mask and get its contours
         mask = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
-        _, mask = cv2.threshold(mask, 1, 255, cv2.THRESH_BINARY)
+        _, mask = cv2.threshold(mask, 1, 255, cv2.THRESH_BINARY)  # 将灰度图像进行二值化
 
         H, W = mask.shape
         contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -17,10 +17,12 @@ def masks2labels(masks_dir, labels_dir):
         # convert the contours to polygons
         polygons = []
         for cnt in contours:
-            if cv2.contourArea(cnt) > 200:
+            if cv2.contourArea(cnt) > 200:  # 过滤掉面积小于200的轮廓
                 polygon = []
                 for point in cnt:
+                    # 遍历轮廓的每个点坐标
                     x, y = point[0]
+                    # 归一化坐标
                     polygon.append(x / W)
                     polygon.append(y / H)
                 polygons.append(polygon)

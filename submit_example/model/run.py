@@ -4,15 +4,20 @@ import random
 import tifffile
 import numpy as np
 from PIL import Image, ImageFile
+from ultralytics import YOLO
 
 #! 突破大文件限制, 读取4GB以上tif文件
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 Image.MAX_IMAGE_PIXELS = None
 
+
+
+
+
 def main(to_pred_dir, result_save_path):
     run_py_path = os.path.abspath(__file__)  #! run.py路径
     model_dir = os.path.dirname(run_py_path) #! model文件夹路径
-    #! model = ... 根据实际情况载入模型
+    model = YOLO(model_dir + "model.pt")  # TODO
 
     pred_imgs_paths = os.listdir(to_pred_dir)
     pred_img_path = os.path.join(to_pred_dir, pred_imgs_paths[0]) #! 测试集只有一张图片
@@ -22,7 +27,7 @@ def main(to_pred_dir, result_save_path):
     print(image_array.shape)  #! image_array.shape (h, w, c)
     #! pred = model(to_pred_image) 根据实际情况使用模型进行预测
 
-    pred = np.random.randint(0,2,size=to_pred_image.size[::-1], dtype=np.uint8) #! 示例是随机生成
+    pred = model.predict(image_array)
     print(pred.shape) #! (h, w)
 
     #! cv保存
