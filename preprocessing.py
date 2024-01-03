@@ -36,6 +36,8 @@ crop_size = (640, 640)
 
 def crop_img(img: Image):
     # 将两张图片裁剪成相同形状的一组图像
+    # TODO: 调整步长，重叠裁剪，重叠 120 的宽度
+    width_overlap = 120
     img_list = []
     (width, height) = img.size  # (img.width, img.height)
     num_cols = width // crop_size[0]
@@ -44,7 +46,7 @@ def crop_img(img: Image):
         for col in range(num_cols):
             left = col * crop_size[0]
             top = row * crop_size[1]
-            right = (col + 1) * crop_size[0]
+            right = (col + 1) * crop_size[0] + width_overlap
             bottom = (row + 1) * crop_size[1]
 
             cropped_img = img.crop((left, top, right, bottom))
@@ -77,20 +79,20 @@ def train_val_split(X, test_size=0.3):
 train_index, val_index = train_val_split(img_list, test_size=0.3)
 
 # 存储训练集与验证集的样本序号
-with open("train.txt", 'w') as f:
+with open("train2.txt", 'w') as f:
     for i in train_index:
         f.write(str(i) + '\n')
 
-with open("val.txt", 'w') as f:
+with open("val2.txt", 'w') as f:
     for i in val_index:
         f.write(str(i) + '\n')
 
 
 for i in train_index:
-    img_list[i].save(f"datasets/images/train/{i}.png")
-    img_mask_list[i].save(f"datasets/masks/train/{i}_mask.png")
+    img_list[i].save(f"datasets/images/train2/{i}.png")
+    img_mask_list[i].save(f"datasets/masks/train2/{i}_mask.png")
 
 for i in val_index:
-    img_list[i].save(f"datasets/images/val/{i}.png")
-    img_mask_list[i].save(f"datasets/masks/val/{i}_mask.png")
+    img_list[i].save(f"datasets/images/val2/{i}.png")
+    img_mask_list[i].save(f"datasets/masks/val2/{i}_mask.png")
 
