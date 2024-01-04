@@ -3,4 +3,4 @@ train: images/train
 val: images/val
 
 nc: 1
-names: ['渔排']
+names: ['yp']
