@@ -1,6 +1,7 @@
 from PIL import Image
 from PIL import ImageFile
 import random
+from tqdm import tqdm
 
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
@@ -34,23 +35,45 @@ img2_mask = img2_mask.crop((left, upper, right, lower))
 # img1: (22019, 11369), img2: (12940, 21180) -> (640, 640)
 crop_size = (640, 640)
 
-def crop_img(img: Image):
+def crop_img(img: Image, width_overlap=160):
     # 将两张图片裁剪成相同形状的一组图像
-    # TODO: 调整步长，重叠裁剪，重叠 120 的宽度
-    width_overlap = 120
-    img_list = []
+    # 重叠 160 的宽度（根据可能的最小渔排的大小和图像裁剪大小来确定）----> TODO: 80 and only train
     (width, height) = img.size  # (img.width, img.height)
-    num_cols = width // crop_size[0]
-    num_rows = height // crop_size[1]
-    for row in range(num_rows):
-        for col in range(num_cols):
-            left = col * crop_size[0]
-            top = row * crop_size[1]
-            right = (col + 1) * crop_size[0] + width_overlap
-            bottom = (row + 1) * crop_size[1]
+    img_list = []
 
-            cropped_img = img.crop((left, top, right, bottom))
+    num_cols, remainder_x = width // crop_size[0], width % crop_size[0]
+    num_rows, remainder_y = height // crop_size[1], height % crop_size[1]
+    remainder = 80  # 根据可能的最小渔排的大小来确定
+    if remainder_x >= remainder and remainder_y >= remainder:
+        img = img.resize(((num_cols + 1) * crop_size[0], (num_rows + 1) * crop_size[1]))
+
+    elif remainder_x >= remainder and remainder_x < remainder:
+        img = img.resize(((num_cols + 1) * crop_size[0], num_rows * crop_size[1]))
+
+    elif remainder_x < remainder and remainder_x >= remainder:
+        img = img.resize((num_cols * crop_size[0], (num_rows + 1) * crop_size[1]))
+
+    else:
+        img = img.resize((num_cols * crop_size[0], num_rows * crop_size[1]))
+
+    (new_w, new_h) = img.size
+    new_img = Image.new('RGB', size=(new_w + width_overlap * 2, new_h + width_overlap * 2))
+    new_nc, new_nr = new_w // (crop_size[0]), new_w // (crop_size[1])
+
+    new_img.paste(img, box=(width_overlap, width_overlap))
+    # new_img.show()
+    top = 0
+    for i in tqdm(range(new_nr)):
+        left = 0
+        bottom = top + crop_size[0]
+        for j in range(new_nc):
+            right = left + crop_size[1]
+            cropped_img = new_img.crop((left, top, right, bottom))  # 边界？？
             img_list.append(cropped_img)
+            left = right - width_overlap  # 更新下一小块图像的左边界
+
+        top = bottom - width_overlap
+
 
     return img_list
 
@@ -88,11 +111,11 @@ with open("val2.txt", 'w') as f:
         f.write(str(i) + '\n')
 
 
-for i in train_index:
+for i in tqdm(train_index):
     img_list[i].save(f"datasets/images/train2/{i}.png")
     img_mask_list[i].save(f"datasets/masks/train2/{i}_mask.png")
 
-for i in val_index:
+for i in tqdm(val_index):
     img_list[i].save(f"datasets/images/val2/{i}.png")
     img_mask_list[i].save(f"datasets/masks/val2/{i}_mask.png")
 
