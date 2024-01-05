@@ -68,7 +68,7 @@ def crop_img(img: Image, width_overlap=160):
         bottom = top + crop_size[0]
         for j in range(new_nc):
             right = left + crop_size[1]
-            cropped_img = new_img.crop((left, top, right, bottom))  # 边界？？
+            cropped_img = new_img.crop((left, top, right, bottom))
             img_list.append(cropped_img)
             left = right - width_overlap  # 更新下一小块图像的左边界
 
