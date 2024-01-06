@@ -99,23 +99,27 @@ def train_val_split(X, test_size=0.3):
     train_index = train_index[0: (nums - test_num)]
     return train_index, val_index
 
-train_index, val_index = train_val_split(img_list, test_size=0.3)
+# train_index, val_index = train_val_split(img_list, test_size=0.3)
 
-# 存储训练集与验证集的样本序号
-with open("train2.txt", 'w') as f:
-    for i in train_index:
-        f.write(str(i) + '\n')
+# # 存储训练集与验证集的样本序号
+# with open("train2.txt", 'w') as f:
+#     for i in train_index:
+#         f.write(str(i) + '\n')
 
-with open("val2.txt", 'w') as f:
-    for i in val_index:
-        f.write(str(i) + '\n')
+# with open("val2.txt", 'w') as f:
+#     for i in val_index:
+#         f.write(str(i) + '\n')
 
 
-for i in tqdm(train_index):
-    img_list[i].save(f"datasets/images/train2/{i}.png")
-    img_mask_list[i].save(f"datasets/masks/train2/{i}_mask.png")
+# for i in tqdm(train_index):
+#     img_list[i].save(f"datasets/images/train2/{i}.png")
+#     img_mask_list[i].save(f"datasets/masks/train2/{i}_mask.png")
 
-for i in tqdm(val_index):
-    img_list[i].save(f"datasets/images/val2/{i}.png")
-    img_mask_list[i].save(f"datasets/masks/val2/{i}_mask.png")
+# for i in tqdm(val_index):
+#     img_list[i].save(f"datasets/images/val2/{i}.png")
+#     img_mask_list[i].save(f"datasets/masks/val2/{i}_mask.png")
 
+
+for i in range(len(img_list)):
+    img_list[i].save(f"datasets/images/train3/{i}.png")
+    img_mask_list[i].save(f"datasets/masks/train3/{i}_mask.png")
